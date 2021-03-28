@@ -7,74 +7,75 @@ namespace VideoGamesWebAPIProject.Repository
 {
     public class MSSQLVideogamesRepository: IRepository<VideoGame>
     {
-        private readonly VideoGamesContext db;
-        private bool disposed = false;
+        private readonly VideoGamesContext _db;
+        private bool _disposed = false;
 
         public MSSQLVideogamesRepository(VideoGamesContext videoGamesContext)
         {
-            db = videoGamesContext;
+            _db = videoGamesContext;
         }
 
         public IQueryable<VideoGame> GetVideoGamesList()
         {
-            return db.VideoGames;
+            return _db.VideoGames;
         }
 
         public void Create(VideoGame videoGame)
         {
-            db.VideoGames.Add(videoGame);
+            _db.VideoGames.Add(videoGame);
             Save();
         }
 
-        public string  Edit(VideoGame videoGame)
+        public ResponseStatusMessages  Edit(VideoGame videoGame)
         {
             try
             {
-                db.Entry(videoGame).State = EntityState.Modified;
+                _db.Entry(videoGame).State = EntityState.Modified;
                 Save();
-                return $"Id {videoGame.Id} Updated! ";
+                return ResponseStatusMessages.Done;
             }
             catch
             {
-                return $"Id {videoGame.Id} Not Found!";
+                return ResponseStatusMessages.ItemNotFound;
             }
         }
 
-        public string Delete(int id)
+        public ResponseStatusMessages Delete(int id)
         {
-            VideoGame videoGame = db.VideoGames.Find(id);
+            VideoGame videoGame = _db.VideoGames.Find(id);
             if (videoGame != null)
             {
-                db.VideoGames.Remove(videoGame);
+                _db.VideoGames.Remove(videoGame);
                 Save();
 
-                return $"Id {videoGame.Id} Deleted!";
+                return ResponseStatusMessages.Done;
             }
 
-            return $"Id {id} Not Found!";
+            return ResponseStatusMessages.ItemNotFound;
         }
 
         public VideoGame GetVideoGameById(int id)
         {
-            return db.VideoGames.Find(id);
+            return _db.VideoGames.Find(id);
         }
 
         public void Save()
         {
-            db.SaveChanges();
+            _db.SaveChanges();
         }
 
         public virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
-                    db.Dispose();
+                    _db.Dispose();
                 }
             }
-            disposed = true;
+            _disposed = true;
         }
+
         public void Dispose()
         {
             Dispose(true);

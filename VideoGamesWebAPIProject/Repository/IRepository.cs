@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VideoGamesWebAPIProject.Models;
 
 namespace VideoGamesWebAPIProject.Repository
 {
@@ -11,9 +12,9 @@ namespace VideoGamesWebAPIProject.Repository
 
         void Create(T item);
 
-        string Edit(T item);
+        ResponseStatusMessages Edit(T item);
 
-        string Delete(int id);
+        ResponseStatusMessages Delete(int id);
 
         void Save();
     }

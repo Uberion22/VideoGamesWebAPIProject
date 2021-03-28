@@ -24,4 +24,9 @@ namespace VideoGamesWebAPIProject.Models
         Android,
         Other,
     }
+    public enum ResponseStatusMessages
+    {
+        Done = 1,
+        ItemNotFound,
+    }
 }

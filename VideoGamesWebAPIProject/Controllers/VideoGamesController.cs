@@ -21,7 +21,7 @@ namespace VideoGamesWebAPIProject.Controllers
         /// Получить список объектов "VideoGame"
         /// </summary>
         /// <returns>Возвращает статус выполнения,
-        /// в случае успешности возвращает список объектов "VideoGame"</returns>
+        /// в случае успешности запроса возвращает список объектов "VideoGame"</returns>
         [HttpGet]
         public ActionResult All()
         {
@@ -40,7 +40,7 @@ namespace VideoGamesWebAPIProject.Controllers
         /// </summary>
         /// <param name="id">id искомой игры </param>
         /// <returns>Возвращает статус выполнения,
-        /// в случае успешности возвращает и объект "VideoGame"</returns>
+        /// в случае успешности запроса дополнительно возвращает объект "VideoGame"</returns>
         [HttpGet("{id}")]
         public ActionResult GetById(int id)
         {
@@ -54,17 +54,17 @@ namespace VideoGamesWebAPIProject.Controllers
         }
 
         /// <summary>
-        /// GET: api/VideoGamesController/GetByFilter
+        /// POST: api/VideoGamesController/GetByFilter
         /// Получить список объектов "VideoGame"
         /// </summary>
         /// <param name="filter">Объект содержащий условия фильтрации</param>
-        /// <returns>Возвращает статус выполнения, в случае успешности возвращает
+        /// <returns>Возвращает статус выполнения, в случае успешности запроса возвращает
         /// список объектов "VideoGame" удовлетворяющих условиям фильтрации</returns>
-        [HttpGet]
+        [HttpPost]
         public ActionResult GetByFilter(VideoGamesFilterQueryOptions filter)
         {
-            var validationAnswerResault = IsValid();
-            if (validationAnswerResault == null)
+            var validationAnswerResult = IsValid();
+            if (validationAnswerResult == null)
             {
                 var videoGamesList = _manager.GetGamesWithFilter(filter);
                 if (videoGamesList.Count() > 0)
@@ -75,43 +75,43 @@ namespace VideoGamesWebAPIProject.Controllers
                 return NotFound();
             }
 
-            return validationAnswerResault;
+            return validationAnswerResult;
         }
 
         /// <summary>
         /// PUT: api/VideoGamesController/Update
         /// Обновить запись
         /// </summary>
-        /// <param name="videoGame">Данные объекта которые должны обновиться обновить</param>
+        /// <param name="videoGame">Модель объекта "ViedoGame" содержащая необходимые изменения</param>
         /// <returns>Возвращает статус выполнения</returns>
         [HttpPut]
         public ActionResult Update(VideoGame videoGame)
         {
-            var validationAnswerResault = IsValid();
-            if (validationAnswerResault == null)
+            var validationAnswerResult = IsValid();
+            if (validationAnswerResult == null)
             {
-                var status = _manager.EditVIdeoGame(videoGame);
-                if (status.Equals("Not Found!"))
+                var message = _manager.EditVIdeoGame(videoGame);
+                if (message == ResponseStatusMessages.Done)
                 {
-                    return Ok(status);
+                    return Ok(message.ToString());
                 }
 
-                return NotFound(status);
+                return NotFound(message.ToString());
             }
 
-            return validationAnswerResault;
+            return validationAnswerResult;
         }
 
         /// <summary>
         /// POST: api/VideoGamesController/Add
         /// Добавить новую запись
         /// </summary>
-        /// <param name="videoGame">Данные нового объекта</param>
+        /// <param name="videoGame">Модель объекта "ViedoGame" содержащая данные нового объекта</param>
         /// <returns>Возвращает статус выполнения операции</returns>
         [HttpPost]
         public ActionResult Add(VideoGame videoGame)
         {
-            var response = IsValid() ?? Ok(_manager.AddVideoGame(videoGame));
+            var response = IsValid() ?? Ok(_manager.AddVideoGame(videoGame).ToString());
 
             return response;
         }
@@ -125,13 +125,13 @@ namespace VideoGamesWebAPIProject.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var status = _manager.DeleteVideoGame(id);
-            if (status.Equals("Not Found!"))
+            var message = _manager.DeleteVideoGame(id);
+            if (message == ResponseStatusMessages.ItemNotFound)
             {
-                return NotFound(status);
+                return NotFound(message.ToString());
             }
 
-            return Ok(status);
+            return Ok(message.ToString());
         }
 
         /// <summary>

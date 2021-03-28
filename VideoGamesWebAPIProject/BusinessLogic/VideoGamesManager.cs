@@ -52,26 +52,25 @@ namespace VideoGamesWebAPIProject.BusinessLogic
             return videoGames;
         }
 
-        public string AddVideoGame(VideoGame videoGame)
+        public ResponseStatusMessages AddVideoGame(VideoGame videoGame)
         {
             _repository.Create(videoGame);
 
-            return "Added!";
+            return ResponseStatusMessages.Done;
         }
 
-        public string EditVIdeoGame(VideoGame videoGame)
+        public ResponseStatusMessages EditVIdeoGame(VideoGame videoGame)
         {
             var status =_repository.Edit(videoGame);
 
             return status;
         }
 
-        public string DeleteVideoGame(int id)
+        public ResponseStatusMessages DeleteVideoGame(int id)
         {
             var status = _repository.Delete(id);
 
             return status;
         }
-
     }
 }

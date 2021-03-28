@@ -13,10 +13,12 @@ namespace VideoGamesWebAPIProject.Models
         public string Description { get; set; }
         
         public int Price { get; set; }
-        
+
+        [Required(ErrorMessage = "Поле Название платформы  не может быть пустым")]
         public VideogamePlatform Platform { get; set; }
-        
-        public VideoGameGenre Genre { get; set; }
+
+        [Required(ErrorMessage = "Поле жанр не может быть пустым")]
+        public VideoGameGenre Genre { get; set; } 
         
         public DateTime ReleaseDate { get; set; }
     }
