@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VideoGamesWebAPIProject.Models
 {
@@ -14,12 +16,12 @@ namespace VideoGamesWebAPIProject.Models
         
         public int Price { get; set; }
 
-        [Required(ErrorMessage = "Поле Название платформы  не может быть пустым")]
         public VideogamePlatform Platform { get; set; }
 
-        [Required(ErrorMessage = "Поле жанр не может быть пустым")]
-        public VideoGameGenre Genre { get; set; } 
+        public IEnumerable<VideoGameGenre> Genre { get; set; } 
         
         public DateTime ReleaseDate { get; set; }
+
+        public string DeveloperStudio { get; set; }
     }
 }

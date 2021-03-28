@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using VideoGamesWebAPIProject.Models;
 using VideoGamesWebAPIProject.Repository;
 
@@ -29,16 +30,12 @@ namespace VideoGamesWebAPIProject.BusinessLogic
         /// <param name="filter">экземпляр класса содержащий параметры фильрации</param>
         /// <returns> Возвращает список видеоигр удовлетворяющих условиям поиска,
         /// хранящихся в соответствующийх полях объекта класса FilterOptions</returns>
-        public IQueryable<VideoGame> GetGamesWithFilter(VideoGamesFilterQueryOptions filter)
+        public List<VideoGame> GetGamesWithFilter(VideoGamesFilterQueryOptions filter)
         {
             var videoGames = GetVideoGamesList();
             if(filter.Title != null)
             {
                 videoGames = videoGames.Where(p => p.Title.Contains(filter.Title));
-            };
-            if(filter.Genre > 0)
-            {
-                videoGames = videoGames.Where(p => p.Genre == filter.Genre);
             };
             if (filter.Price > 0)
             {
@@ -49,7 +46,21 @@ namespace VideoGamesWebAPIProject.BusinessLogic
                 videoGames = videoGames.Where(p => p.Platform == filter.Platform);
             };
 
-            return videoGames;
+            if (filter.Genre <= 0)
+            {
+                return videoGames.ToList();
+            }
+            var resilt = new List<VideoGame>();
+
+            foreach (var game in videoGames)
+            {
+                if (game.Genre.Contains(filter.Genre))
+                {
+                    resilt.Add(game);
+                }
+            }
+
+            return resilt;
         }
 
         public ResponseStatusMessages AddVideoGame(VideoGame videoGame)
